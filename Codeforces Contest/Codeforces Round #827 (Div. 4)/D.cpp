@@ -4,28 +4,34 @@ using namespace std;
 #define per(i, a, n) for (int i = n - 1; i >= 0; i--)
 #define ll long long int
 
-bool isCoprime(int a, int b)
+bool isCoprime(int x, int y)
 {
-    int gcd = __gcd(a, b);
-    return gcd == 1 ? true : false;
+    return __gcd(x, y) == 1;
 }
 
-int solve(int arr[], int n)
+void solve(vector<pair<int, int>> &unique)
 {
-    int maxi = -1;
+    int n = unique.size(), maxi = -1;
 
-    rep(i, 0, n - 1)
+    rep(i, 0, n)
     {
-        rep(j, i + 1, n)
+        rep(j, i, n)
         {
-            if (isCoprime(arr[i], arr[j]))
+            if (unique[i].first != -1)
             {
-                maxi = max(maxi, (i + j));
+                int x = unique[i].first;
+                int y = unique[j].first;
+
+                if (isCoprime(x, y))
+                {
+                    int curr = unique[i].second + unique[j].second;
+                    maxi = max(maxi, curr);
+                }
             }
         }
     }
 
-    return maxi;
+    cout << maxi << endl;
 }
 
 int main()
@@ -38,11 +44,21 @@ int main()
         int n;
         cin >> n;
 
-        int arr[n];
+        vector<pair<int, int>> pairs(1001, {-1, -1});
 
-        rep(i, 0, n) cin >> arr[n];
+        rep(i, 1, n + 1)
+        {
+            int val;
+            cin >> val;
 
-        cout << solve(arr, n) << endl;
+            pair<int, int> curr;
+            curr.first = val;
+            curr.second = i;
+
+            pairs[val] = curr;
+        }
+
+        solve(pairs);
     }
 
     return 0;
